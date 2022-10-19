@@ -46,6 +46,7 @@ pub struct Image {
     #[serde(with = "crate::jsonfetch::tuple_format")]
     pub camera_position: Option<Vec<f64>>,
 
+    // FIXME "type" infers Option<CameraModel>
     pub camera_model_type: Option<String>,
 
     pub drive: Option<u32>,
@@ -98,7 +99,7 @@ impl ImageMetadata for Image {
     }
 
     fn get_dimension(&self) -> Option<Vec<f64>> {
-        unimplemented!()
+        None
     }
 
     fn get_sample_type(&self) -> String {
@@ -170,11 +171,11 @@ impl ImageMetadata for Image {
     }
 
     fn get_mast_az(&self) -> Option<f64> {
-        unimplemented!()
+        None
     }
 
     fn get_mast_el(&self) -> Option<f64> {
-        unimplemented!()
+        None
     }
 
     fn get_sclk(&self) -> Option<f64> {
@@ -194,7 +195,7 @@ pub fn load_metadata_file(file_path: String) -> error::Result<Metadata> {
         Ok(file) => file,
     };
 
-    let mut buf: Vec<u8> = Vec::default();
+    let mut buf: Vec<u8> = vec![];
     file.read_to_end(&mut buf).unwrap();
     let s = String::from_utf8(buf).unwrap();
 

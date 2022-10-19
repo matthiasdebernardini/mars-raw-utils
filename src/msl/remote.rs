@@ -58,19 +58,6 @@ fn print_image(output_path: &str, image: &Image) {
     );
 }
 
-fn search_empty_or_has_match(image_id: &str, search: &[String]) -> bool {
-    if search.is_empty() {
-        return true;
-    }
-
-    for i in search.iter() {
-        if image_id.contains(i) {
-            return true;
-        }
-    }
-    false
-}
-
 async fn process_results(
     results: &MslApiResults,
     thumbnails: bool,
@@ -80,18 +67,16 @@ async fn process_results(
     output_path: &str,
 ) -> Result<i32> {
     let mut valid_img_count = 0;
-    for image in results.items.iter() {
-        // If this image is a thumbnail and we're ignoring those, then ignore it.
-        if image.is_thumbnail && !thumbnails {
-            continue;
-        }
 
-        // If we're searching for a substring and this image doesn't match, skip it.
-        if !search_empty_or_has_match(&image.imageid, search) {
-            continue;
-        }
-
-        valid_img_count += 1;
+    for (idx, image) in results
+        .items
+        .iter()
+        .filter(|image| {
+            image.is_thumbnail && !thumbnails && search.iter().any(|i| image.imageid.contains(i))
+        })
+        .enumerate()
+    {
+        valid_img_count = idx as i32;
         print_image(output_path, image);
 
         if !list_only {

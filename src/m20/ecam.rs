@@ -67,7 +67,7 @@ impl Calibration for M20EECam {
 
         let mut raw = MarsImage::open(String::from(input_file), instrument);
 
-        let data_max = 255.0;
+        // let data_max = 255.0;
 
         // if ! no_ilt {
         //     vprintln!("Decompanding...");
@@ -94,7 +94,7 @@ impl Calibration for M20EECam {
         );
 
         vprintln!("Normalizing...");
-        raw.image.normalize_to_16bit_with_max(data_max);
+        raw.image.normalize_to_16bit_with_max(255.0);
 
         // Trim off border pixels
         //let crop_to_width = raw.image.width - 4;

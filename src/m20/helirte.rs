@@ -27,8 +27,6 @@ impl Calibration for M20HeliRte {
 
         let mut raw = MarsImage::open(String::from(input_file), enums::Instrument::M20HeliRte);
 
-        let data_max = 255.0;
-
         //if ! no_ilt {
         //    vprintln!("Decompanding...");
         //    raw.decompand().unwrap();
@@ -46,7 +44,7 @@ impl Calibration for M20HeliRte {
         );
 
         vprintln!("Normalizing...");
-        raw.image.normalize_to_16bit_with_max(data_max);
+        raw.image.normalize_to_16bit_with_max(255.0);
 
         vprintln!("Writing to disk...");
         raw.save(&out_file);

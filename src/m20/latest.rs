@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct LatestData {
+    // FIXME make datetime
     pub latest: String,
     pub latest_sol: u16,
     pub latest_sols: Vec<u16>,

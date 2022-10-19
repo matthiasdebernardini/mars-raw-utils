@@ -193,17 +193,16 @@ impl ImageMetadata for Image {
 
 pub fn load_metadata_file(file_path: String) -> error::Result<Metadata> {
     vprintln!("Loading metadata file from {}", file_path);
-
     if !path::file_exists(file_path.as_str()) {
         return Err(constants::status::FILE_NOT_FOUND);
     }
 
-    let mut file = match File::open(&file_path) {
+    let mut file: File = match File::open(&file_path) {
         Err(why) => panic!("couldn't open {}", why),
         Ok(file) => file,
     };
 
-    let mut buf: Vec<u8> = Vec::default();
+    let mut buf: Vec<u8> = vec![];
     file.read_to_end(&mut buf).unwrap();
     let s = String::from_utf8(buf).unwrap();
 

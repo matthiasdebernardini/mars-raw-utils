@@ -72,36 +72,32 @@ async fn process_results(
 ) -> Result<i32> {
     let mut valid_img_count = 0;
 
-    for image in results.images.iter() {
-        // If this image is a thumbnail and we're ignoring those, then ignore it.
-        if image.sample_type == "Thumbnail" && !thumbnails {
-            continue;
-        }
-
-        // If we're searching for a substring and this image doesn't match, skip it.
-        if !search_empty_or_has_match(&image.imageid, search) {
-            continue;
-        }
-
-        valid_img_count += 1;
+    for (idx, image) in results
+        .images
+        .iter()
+        .filter(|image| {
+            image.sample_type.contains("Thumbnail")
+                && !thumbnails
+                && search.iter().any(|i| image.imageid.contains(i))
+        })
+        .enumerate()
+    {
+        valid_img_count = idx as i32;
         print_image(output_path, image);
 
         if !list_only {
-            match fetch_image(&image.image_files.full_res, only_new, Some(output_path)).await {
-                Ok(_) => (),
-                Err(e) => return Err(e),
-            };
+            fetch_image(&image.image_files.full_res, only_new, Some(output_path))
+                .await
+                .ok();
 
             let image_base_name = path::basename(image.image_files.full_res.as_str());
-            match save_image_json(
+            save_image_json(
                 &image_base_name,
                 &convert_to_std_metadata(image),
                 only_new,
                 Some(output_path),
-            ) {
-                Ok(_) => (),
-                Err(e) => return Err(e),
-            };
+            )
+            .ok();
         }
     }
 

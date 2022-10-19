@@ -27,8 +27,6 @@ impl Calibration for M20HeliNav {
 
         let mut raw = MarsImage::open(String::from(input_file), enums::Instrument::M20HeliNav);
 
-        let data_max = 255.0;
-
         //if ! no_ilt {
         //    vprintln!("Decompanding...");
         //    raw.decompand().unwrap();
@@ -39,7 +37,7 @@ impl Calibration for M20HeliNav {
         raw.flatfield();
 
         vprintln!("Normalizing...");
-        raw.image.normalize_to_16bit_with_max(data_max);
+        raw.image.normalize_to_16bit_with_max(255.0);
 
         vprintln!("Writing to disk...");
         raw.save(&out_file);

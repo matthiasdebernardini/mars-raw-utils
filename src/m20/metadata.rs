@@ -64,14 +64,17 @@ pub struct Image {
     pub camera: Camera,
     pub caption: String,
     pub sample_type: String,
+    // FIXME make datetime
     pub date_taken_mars: String,
     pub credit: String,
+    //FIXMe datetime
     pub date_taken_utc: String,
     pub json_link: String,
     pub link: String,
     pub drive: String,
     pub title: String,
     pub site: u32,
+    //FIXMe datetime
     pub date_received: String,
 }
 
@@ -215,7 +218,7 @@ pub fn load_metadata_file(file_path: String) -> error::Result<Metadata> {
         Ok(file) => file,
     };
 
-    let mut buf: Vec<u8> = Vec::default();
+    let mut buf: Vec<u8> = vec![];
     file.read_to_end(&mut buf).unwrap();
     let s = String::from_utf8(buf).unwrap();
 
